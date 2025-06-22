@@ -1,7 +1,9 @@
 import sqlite3
+import os
 
 def create_tables():
-    connection = sqlite3.connect('taskcrafter.db')
+    # Use environment variable for DB path or fallback to local
+    connection = sqlite3.connect(os.getenv("DB_PATH", "taskcrafter.db"))
     cursor = connection.cursor()
 
     # Create users table
@@ -52,7 +54,7 @@ def create_tables():
     )
     ''')
 
-    # ✅ Create completed_tasks table
+    # Create completed_tasks table
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS completed_tasks (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

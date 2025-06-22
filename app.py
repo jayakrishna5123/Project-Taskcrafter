@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from datetime import datetime, timezone , timedelta
 from functools import wraps
 import sqlite3
+import os
+
 
 def login_required(f):
     @wraps(f)
@@ -24,7 +26,7 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # Replace with a strong key in production
 
 def get_db_connection():
-    conn = sqlite3.connect('taskcrafter.db')
+    conn = sqlite3.connect(os.getenv("DB_PATH", "taskcrafter.db"))
     conn.row_factory = sqlite3.Row
     return conn
 
