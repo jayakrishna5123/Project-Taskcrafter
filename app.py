@@ -3,6 +3,7 @@ from datetime import datetime, timezone , timedelta
 from functools import wraps
 import sqlite3
 import os
+from init_db import create_tables
 
 
 def login_required(f):
@@ -24,6 +25,7 @@ def parse_timestamp(ts):
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # Replace with a strong key in production
+create_tables()
 
 def get_db_connection():
     conn = sqlite3.connect(os.getenv("DB_PATH", "taskcrafter.db"))
