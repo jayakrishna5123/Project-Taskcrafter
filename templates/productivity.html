@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Productivity Summary - TaskCrafter{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='productivity.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h1 class="title">Productivity Summary</h1>
+
+  <div class="summary-grid">
+    <div class="card">
+      <h3>Total Tasks Completed</h3>
+      <p>{{ total_completed }}</p>
+    </div>
+    <div class="card">
+      <h3>Total Estimated Time</h3>
+      <p>{{ total_estimated }} mins</p>
+    </div>
+    <div class="card">
+      <h3>Total Actual Time</h3>
+      <p>{{ total_actual }} mins</p>
+    </div>
+    <div class="card">
+      <h3>Efficiency</h3>
+      <p>{{ efficiency }}%</p>
+    </div>
+  </div>
+
+  <div class="motivation">
+    {% if efficiency >= 90 %}
+      <p>Amazing work! Keep up the fantastic productivity!</p>
+    {% elif efficiency >= 70 %}
+      <p>Great job! You're doing well, keep pushing forward!</p>
+    {% elif efficiency >= 50 %}
+      <p>Good effort! Try to improve a bit more tomorrow.</p>
+    {% else %}
+      <p>Don't give up! Every day is a new chance to boost your productivity!</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

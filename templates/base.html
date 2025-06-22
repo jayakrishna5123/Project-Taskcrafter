@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}TaskCrafter{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    
+    {% block extra_styles %}{% endblock %}
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+
+    <div class="topbar">
+        <a href="{{ url_for('dashboard') }}" class="back-to-dashboard">Home Page</a>
+
+        <a href="{{ url_for('view_completed_tasks') }}" class="completed-link">Completed Tasks</a>
+        <a href="{{ url_for('productivity') }}" class="productivity-link">Productivity</a>
+
+        <a href="{{ url_for('profile') }}" class="profile" title="Profile">
+            <div class="profile-icon">{{ username[0] | upper }}</div>
+        </a>
+        <form action="{{ url_for('logout') }}" method="get" style="margin: 0;">
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+    </div>
+
+    <div class="main-content">
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+<script>
+  // Auto-hide flash messages after 4 seconds
+  setTimeout(() => {
+    const messages = document.querySelectorAll('.flash-message');
+    messages.forEach(msg => {
+      msg.style.transition = "opacity 0.5s ease";
+      msg.style.opacity = 0;
+      setTimeout(() => msg.remove(), 500);  // fully remove after fade-out
+    });
+  }, 4000);  // Show for 4 seconds
+</script>
+
+</html>

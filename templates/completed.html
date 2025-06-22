@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Completed Tasks - TaskCrafter{% endblock %}
+
+{% block extra_styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='completed.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+  
+  <!-- Title -->
+  <h1 class="completed-title">Completed Tasks</h1>
+
+  <div class="filters-wrapper">
+    <form method="get" action="{{ url_for('view_completed_tasks') }}" class="filter-form">
+      <label for="filter">Filter by Date:</label>
+      <select name="filter" id="filter">
+        <option value="all" {% if selected_filter == 'all' %}selected{% endif %}>All Time</option>
+        <option value="today" {% if selected_filter == 'today' %}selected{% endif %}>Today</option>
+        <option value="last7" {% if selected_filter == 'last7' %}selected{% endif %}>Last 7 Days</option>
+        <option value="last30" {% if selected_filter == 'last30' %}selected{% endif %}>Last 30 Days</option>
+      </select>
+
+      &nbsp;&nbsp;
+
+      <label for="time_filter">Time Performance:</label>
+      <select name="time_filter" id="time_filter">
+        <option value="all" {% if selected_time_filter == 'all' %}selected{% endif %}>All</option>
+        <option value="before" {% if selected_time_filter == 'before' %}selected{% endif %}>Before Time</option>
+        <option value="on" {% if selected_time_filter == 'on' %}selected{% endif %}>On Time</option>
+        <option value="after" {% if selected_time_filter == 'after' %}selected{% endif %}>After Time</option>
+      </select>
+
+      <button type="submit" class="filter-btn">Apply</button>
+    </form>
+  </div>
+
+  {% if completed_tasks %}
+    {% for task in completed_tasks %}
+      <div class="task-card">
+        <div class="task-header">
+          <h3 class="task-title">{{ task.task_name }}</h3>
+          <div class="task-meta">
+            {% if task.actual_time is not none %}
+              {% if task.actual_time == task.estimated_time %}
+                <span class="on-time">Perfect! Completed on time ({{ task.actual_time }} mins)</span>
+              {% elif task.actual_time < task.estimated_time %}
+                <span class="early">Great! Finished ahead of time ({{ task.actual_time }} mins)</span>
+              {% else %}
+                <span class="late">Took extra time ({{ task.actual_time }} mins vs estimated {{ task.estimated_time }} mins)</span>
+              {% endif %}
+            {% else %}
+              <span class="no-data">Time data not available</span>
+            {% endif %}
+
+            <form method="POST" action="{{ url_for('unmark_complete', task_id=task.id) }}" style="display: inline;">
+              <button class="undo-btn" type="submit">Undo Complete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="no-tasks-message">
+      No completed tasks to show.
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

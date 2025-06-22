@@ -1,0 +1,154 @@
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.main-content {
+  margin: 0;
+  padding: 0;
+}
+
+.dashboard-container {
+  padding: 10px 30px;
+  max-width: 1250px;
+  margin: 0 auto;
+  
+}
+
+.task-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 20px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.task-title {
+  font-size: 20px;
+  margin: 0;
+  font-weight: 600;
+}
+
+.task-meta {
+  display: flex;
+  align-items: center;
+  gap: 200px;
+  flex-wrap: wrap;
+  font-weight: 500;
+  font-size : 17px;
+}
+
+/* Feedback styles */
+.early {
+  color: #37c45f;
+}
+
+.on-time {
+  color: #c59c20;
+}
+
+.late {
+  color: #e4302a;
+}
+
+.no-data {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.undo-btn {
+  background-color: #c838d8;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: background-color 0.3s ease;
+}
+
+.undo-btn:hover {
+  background-color: #d70de5;
+}
+
+.filter-form {
+  text-align: center;
+  margin-bottom: 100px;
+}
+
+.filter-form label {
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.filter-form select {
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.no-tasks-message {
+  height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.4em;
+  color: #555;
+}
+.filter-form {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.filters-wrapper {
+  margin-bottom: 40px; /* adjust to increase spacing */
+  padding: 10px 0 0 ;
+}
+
+
+.filter-form label {
+  font-weight: 600;
+  margin: 0 10px;
+  font-size: 20px;
+}
+
+.filter-form select {
+  padding: 6px 10px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.filter-btn {
+  margin-left: 25px;
+  padding: 6px 12px;
+  font-size: 14px;
+  background-color: #ea8221e5;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.filter-btn:hover {
+  background-color: #e88112;
+}
+.completed-title {
+  text-align: center;
+  font-size: 2.4rem;
+  font-weight: bold;
+  margin-bottom: 0 0 20px;
+  color: #333;
+  padding-bottom:10px;
+}
+

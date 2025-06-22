@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Optimizer - TaskCrafter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='optimize.css') }}">
+    <script>
+        window.addEventListener("DOMContentLoaded", function () {
+            const strategySelect = document.getElementById("strategy");
+            const timeInput = document.getElementById("available_time");
+
+            function toggleTimeRequirement() {
+                if (strategySelect.value === "none") {
+                    timeInput.removeAttribute("required");
+                    timeInput.disabled = true;
+                    timeInput.value = ""; // Clear any previous value
+                } else {
+                    timeInput.setAttribute("required", "required");
+                    timeInput.disabled = false;
+                }
+            }
+
+            strategySelect.addEventListener("change", toggleTimeRequirement);
+            toggleTimeRequirement(); // Run on load to match saved selection
+        });
+    </script>
+</head>
+<body>
+<div class="page-wrapper">
+    <div class="container">
+        <h2>Task Optimizer</h2>
+
+        <form method="POST">
+            <div class="input-group">
+                <label for="available_time">Available Time (in minutes):</label>
+                <input type="number" name="available_time" id="available_time" min="1"
+                       value="{{ available_time or '' }}">
+            </div>
+
+            <div class="input-group">
+                <label for="strategy">Optimization Strategy:</label>
+                <select name="strategy" id="strategy" required>
+                    <option value="" disabled {% if not strategy %}selected{% endif %}>Select a strategy</option>
+                    <option value="max_tasks" {% if strategy == 'max_tasks' %}selected{% endif %}>Maximize Number of Tasks</option>
+                    <option value="priority" {% if strategy == 'priority' %}selected{% endif %}>Lowest Priority First</option>
+                    <option value="longest_job" {% if strategy == 'longest_job' %}selected{% endif %}>Longest Job First</option>
+                    <option value="none" {% if strategy == 'none' %}selected{% endif %}>List All Tasks (No Optimization)</option>
+                </select>
+            </div>
+
+            <button type="submit">Get Tasks List</button>
+        </form>
+
+        {% if strategy and optimized_tasks is not none %}
+        <section class="result-section">
+            <h3>
+                {% if available_time %}
+                    Optimized Tasks ({{ available_time }} minutes)
+                {% else %}
+                    All Tasks (No Optimization)
+                {% endif %}
+            </h3>
+
+            {% if optimized_tasks %}
+                <table class="task-table">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Task Name</th>
+                            <th>Estimated Time (mins)</th>
+                            {% if optimized_tasks[0]|length > 3 %}
+                                <th>Priority</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for task in optimized_tasks %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ task[1] }}</td>
+                            <td>{{ task[2] }}</td>
+                            {% if task|length > 3 %}
+                                <td>{{ task[3] }}</td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                {% if leftover_time is not none %}
+                    {% if leftover_time > 0 %}
+                        {% if total_tasks_remaining > 0 and not next_task_fits %}
+                            <p class="leftover-message warn">
+                                You still have {{ leftover_time }} minutes, but the next task according to selected strategy doesn’t fit within that time.
+                            </p>
+                        {% else %}
+                            <p class="leftover-message all-scheduled">
+                                You still have {{ leftover_time }} minutes, but all tasks are scheduled. Nothing left to do!
+                            </p>
+                        {% endif %}
+                    {% elif leftover_time == 0 %}
+                        {% if total_tasks_remaining > 0 %}
+                            <p class="leftover-message need-more">
+                                You’ll need more time to complete the remaining tasks.
+                            </p>
+                        {% else %}
+                            <p class="leftover-message perfect-fit">
+                                Perfect! Your available time is fully utilized and all tasks are scheduled.
+                            </p>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                <p>Task does not fit within the available time as per selected strategy.</p>
+            {% endif %}
+        </section>
+        {% endif %}
+
+        <a href="{{ url_for('dashboard') }}" class="back-link">← Back to Dashboard</a>
+    </div>
+</div>
+</body>
+</html>

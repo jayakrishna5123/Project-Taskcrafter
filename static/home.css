@@ -1,0 +1,81 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+body::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: url('images/sample9.jpg') no-repeat center 40%;
+  background-size: cover;
+  filter: blur(3px);  
+  transform: scale(1.1);
+  z-index: -1;
+}
+
+
+.welcome-box {
+  background-color: rgba(2, 2, 2, 0.429);
+ /* lighter glassy look */
+  padding: 40px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px); /* makes the box glassy and clear over blur */
+  color: #fff; /* ensure text stays visible */
+  margin-right: 100px;
+  margin-bottom: 50px;
+}
+
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+
+h1 {
+  color: #fff;
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+p {
+  color: #ddd;
+  font-size: 20px;
+  margin-bottom: 24px;
+}
+
+.form-footer {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.form-footer a button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  background-color: #dcb113;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.form-footer a button:hover {
+  background-color:#63c252b9;
+  transform: scale(1.05);
+}
+

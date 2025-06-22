@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login - TaskCrafter</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h2>Login to TaskCrafter</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('login') }}">
+      <input type="text" name="identifier" placeholder="Username or Email" required />
+
+      <div class="password-container">
+        <input type="password" id="password" name="password" placeholder="Password" required />
+        <button type="button" class="toggle-password" onclick="togglePassword()" aria-label="Show or hide password">
+          <!-- Visible eye -->
+          <svg id="eye-open" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#555" viewBox="0 0 24 24">
+            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17a5 5 0 110-10 5 5 0 010 10zm0-8a3 3 0 100 6 3 3 0 000-6z"/>
+          </svg>
+          <!-- Hidden eye (slashed eye) -->
+          <svg id="eye-closed" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#555" viewBox="0 0 24 24" style="display: none;">
+            <path d="M2 2l20 20M12 4.5c-5 0-9.27 3.11-11 7.5a12.27 12.27 0 002.34 3.28L12 4.5zM12 19.5c5 0 9.27-3.11 11-7.5a12.27 12.27 0 00-2.34-3.28L12 19.5z"/>
+          </svg>
+        </button>
+      </div>
+
+      <input type="submit" value="Login" />
+    </form>
+
+    <div class="form-footer">
+      <p>Don't have an account? <a href="{{ url_for('signup') }}">Sign up</a></p>
+      <p><a href="{{ url_for('reset_password') }}">Forgot password?</a></p>
+    </div>
+  </div>
+
+  <script>
+    function togglePassword() {
+      const input = document.getElementById('password');
+      const eyeOpen = document.getElementById('eye-open');
+      const eyeClosed = document.getElementById('eye-closed');
+
+      if (input.type === 'password') {
+        input.type = 'text';
+        eyeOpen.style.display = 'none';
+        eyeClosed.style.display = 'inline';
+      } else {
+        input.type = 'password';
+        eyeOpen.style.display = 'inline';
+        eyeClosed.style.display = 'none';
+      }
+
+      input.focus();
+    }
+  </script>
+</body>
+</html>

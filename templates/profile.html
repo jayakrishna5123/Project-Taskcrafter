@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Your Profile - TaskCrafter{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="profile-header">
+    <h2>Hello, {{ user.username }}! </h2>
+    <p class="subtext">Here's your personalized productivity snapshot on TaskCrafter.</p>
+  </div>
+
+  <div class="profile-details">
+    <div class="info-box">
+      <h3>Account Information</h3>
+      <p><strong>Username:</strong> {{ user.username }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Member Since:</strong> {{ member_since }}</p>
+    </div>
+
+    <div class="stats-box">
+      <h3>Performance Overview</h3>
+      <p><strong>Current Streak:</strong> {{ streak }} day{{ 's' if streak != 1 else '' }}</p>
+
+      {% if best_day %}
+  <p><strong>Best Day:</strong> {{ best_day }} <span class="highlight">({{ max_tasks }} tasks)</span></p>
+{% else %}
+  <p><strong>Best Day:</strong> <span class="no-data">No data yet</span></p>
+{% endif %}
+
+    </div>
+  </div>
+
+  <div class="feedback-box">
+    {% if streak >= 5 %}
+      <p class="message positive">You're on fire! Keep that streak going!</p>
+    {% elif streak >= 2 %}
+      <p class="message moderate">Great job! Let’s aim for a longer streak.</p>
+    {% else %}
+      <p class="message encouragement">Every day is a chance to improve. Let’s start today!</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

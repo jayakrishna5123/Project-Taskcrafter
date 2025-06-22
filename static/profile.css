@@ -1,0 +1,120 @@
+/* Reset */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f8;
+    color: #333;
+    overflow-x: hidden;
+}
+
+/* Container */
+.container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Header */
+.profile-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #e51ea9;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.subtext {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #4e4d4d;
+    margin-bottom: 30px;
+}
+
+/* Info and Stats Grid */
+.profile-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+/* Info and Stats Boxes */
+.info-box, .stats-box {
+    background-color: #f9f9ff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 25px 30px;
+    min-height: 180px;
+}
+
+.info-box h3,
+.stats-box h3 {
+    margin-top: 0;
+    color: #1e88e5;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.info-box p,
+.stats-box p {
+    font-size: 1rem;
+    color: #444;
+    margin: 10px 0;
+}
+
+/* Highlights and Messages */
+.highlight {
+    color: #2b8a3e;
+    font-weight: 600;
+}
+
+.no-data {
+    color: #999;
+    font-style: italic;
+}
+
+/* Feedback Box */
+.feedback-box {
+    margin-top: 30px;
+    padding: 20px 30px;
+    border-radius: 10px;
+    background-color: #eaf6ff;
+    border-left: 5px solid #1e88e5;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: #e65100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Optional message types */
+.message {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.positive {
+    color: #2b8a3e;
+}
+
+.moderate {
+    color: #007bff;
+}
+
+.encouragement {
+    color: #e65100;
+}

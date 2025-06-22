@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - TaskCrafter{% endblock %}
+
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+
+    
+  {# ✅ Flash messages go here INSIDE content block #}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+      <div class="flash-message {{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endwith %} 
+
+  
+  {% if tasks|length > 0 %}
+    <h1 class="dashboard-title">Your Tasks</h1>
+
+    <section class="task-list-section">
+      <ul class="task-list">
+        {% for task in tasks %}
+          <li class="task-card {% if task['is_completed'] %}completed{% endif %}">
+            <div class="task-info">
+              <div class="task-name">{{ task['task_name'] }}</div>
+              <div class="task-estimate">Estimated: {{ task['estimated_time'] }} mins</div>
+              {% if task['start_time_nice'] %}
+                <div class="task-started">Started: {{ task['start_time_nice'] }}</div>
+              {% endif %}
+            </div>
+
+            <div class="task-actions">
+              {% if not task['is_completed'] %}
+                <a href="{{ url_for('edit_task', task_id=task['id']) }}" class="btn-action edit" title="Edit this task" role="button">Edit</a>
+                <a href="{{ url_for('delete_task', task_id=task['id']) }}" class="btn-action delete" title="Delete this task" role="button">Delete</a>
+
+                {% if not task['start_time'] %}
+                  <a href="{{ url_for('start_task', task_id=task['id']) }}" class="btn-action start" title="Start this task" role="button">Start</a>
+                {% else %}
+                  {% if task['is_paused'] %}
+                    <a href="{{ url_for('resume_task', task_id=task['id']) }}" class="btn-action resume" title="Resume this task" role="button">Resume</a>
+                  {% else %}
+                    <a href="{{ url_for('mark_complete', task_id=task['id']) }}" class="btn-action complete" title="Mark as complete" role="button">Complete</a>
+                    <a href="{{ url_for('pause_task', task_id=task['id']) }}" class="btn-action pause" title="Pause this task" role="button">Pause</a>
+                  {% endif %}
+                {% endif %}
+              {% else %}
+                <a href="{{ url_for('unmark_complete', task_id=task['id']) }}" class="btn-action undo-complete" title="Undo completion" role="button">Undo Complete</a>
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+      <div class="task-controls">
+      <a href="{{ url_for('add_task') }}" class="btn1">+ Add More Tasks</a>
+      <a href="{{ url_for('optimize_tasks') }}" class="btn2">Optimize Your Tasks</a>
+  </div>
+    </section>
+
+
+
+  {% else %}
+    <div class="empty-dashboard">
+      <h2>Plan Your Day</h2>
+      <p>List the tasks that you want to accomplish here.</p>
+      <a href="{{ url_for('add_task') }}" class="btn btn-primary" role="button">Add Task</a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}
