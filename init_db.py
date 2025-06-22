@@ -59,17 +59,19 @@ CREATE TABLE IF NOT EXISTS tasks (
     # Create completed_tasks table
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS completed_tasks (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER NOT NULL,
-        task_name TEXT NOT NULL,
-        description TEXT,
-        estimated_time INTEGER NOT NULL,
-        actual_time INTEGER,
-        created_at TEXT,
-        completed_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id)
-    )
-    ''')
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    task_name TEXT NOT NULL,
+    description TEXT,
+    estimated_time INTEGER NOT NULL,
+    actual_time INTEGER,
+    start_time TEXT,  -- ✅ added column
+    created_at TEXT,
+    completed_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+)
+''')
+
 
     connection.commit()
     connection.close()
