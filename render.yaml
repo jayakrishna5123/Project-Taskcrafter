@@ -3,5 +3,5 @@ services:
     name: taskcrafter
     env: python
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn app:app"
+    startCommand: "python init_db.py && gunicorn app:app"
     plan: free
