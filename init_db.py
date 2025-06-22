@@ -26,6 +26,8 @@ def create_tables():
         description TEXT,
         estimated_time INTEGER NOT NULL,
         is_completed INTEGER DEFAULT 0,
+         start_time TEXT,               
+        is_paused INTEGER DEFAULT 0,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id)
     )
