@@ -4,6 +4,7 @@ from functools import wraps
 import sqlite3
 import os
 from init_db import create_tables
+import pytz
 
 
 def login_required(f):
@@ -302,16 +303,21 @@ def mark_complete(task_id):
     return redirect(url_for('dashboard'))
 
 
+
+
 @app.route('/start_task/<int:task_id>')
 def start_task(task_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
+    india_timezone = pytz.timezone("Asia/Kolkata")
+    india_time = datetime.now(india_timezone).strftime("%Y-%m-%d %H:%M:%S")
+
     conn = get_db_connection()
     cur = conn.cursor()
 
     cur.execute("UPDATE tasks SET start_time = ? WHERE id = ? AND user_id = ?",
-                (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), task_id, session['user_id']))
+                (india_time, task_id, session['user_id']))
     conn.commit()
     conn.close()
 
