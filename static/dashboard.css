@@ -2,17 +2,15 @@
   box-sizing: border-box;
 }
 
-/* Reset and base styles */
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow-y: auto;     /* ✅ allow scrolling only when needed */
-  overflow-x: hidden;  
-  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   background-color: #ffffffac;
 }
-
 
 .dashboard-container {
   width: 100%;
@@ -21,10 +19,8 @@ html, body {
   background: #ffffff;
   display: flex;
   flex-direction: column;
-  /* Remove fixed height or overflow control here */
 }
 
-/* Dashboard title */
 .dashboard-title {
   font-size: 2.4rem;
   font-weight: 700;
@@ -33,13 +29,11 @@ html, body {
   margin: 20px 0 30px;
 }
 
-/* Scrollable task list section */
 .task-list-section {
   flex-grow: 1;
   padding: 12px 4px 0 4px;
 }
 
-/* Task list */
 .task-list {
   list-style: none;
   padding: 0;
@@ -48,7 +42,6 @@ html, body {
   max-width: 1250px;
 }
 
-/* Individual task card */
 .task-card {
   background: #f9f9fb;
   border-radius: 12px;
@@ -73,11 +66,20 @@ html, body {
   border-left: 5px solid #28a745;
 }
 
-/* Task info block */
 .task-info {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  flex: 1;
+  width: 100%;
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .task-name {
@@ -85,6 +87,7 @@ html, body {
   font-weight: 600;
   color: #333;
   flex: 1;
+  min-width: 140px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -97,11 +100,12 @@ html, body {
   color: #666;
 }
 
-/* Task action buttons */
 .task-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+   padding-top: 10px; 
+   align-items: flex-start;
 }
 
 .btn-action {
@@ -112,27 +116,19 @@ html, body {
   border: none;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  box-shadow: none;
   text-decoration: none;
 }
 
-.start{
+.edit,
+.start {
   background-color: #edeaff;
   color: #4a3db7;
 }
-.start:hover{
-  background-color: #d7d0ff;
-}
-/* Edit Button */
-.edit {
-  background-color: #edeaff;
-  color: #4a3db7;
-}
-.edit:hover {
+.edit:hover,
+.start:hover {
   background-color: #d7d0ff;
 }
 
-/* Delete Button */
 .delete {
   background-color: #ffe5e5;
   color: #b32525;
@@ -141,7 +137,6 @@ html, body {
   background-color: #ffcccc;
 }
 
-/* Complete Button */
 .complete {
   background-color: #ecebff;
   color: #3c348b;
@@ -150,7 +145,6 @@ html, body {
   background-color: #d8d7ff;
 }
 
-/* Pause Button */
 .pause {
   background-color: #f0ecff;
   color: #5246c4;
@@ -159,7 +153,6 @@ html, body {
   background-color: #ded8ff;
 }
 
-/* Resume Button */
 .resume {
   background-color: #e4e4ff;
   color: #3f3dbf;
@@ -168,7 +161,6 @@ html, body {
   background-color: #cbcafd;
 }
 
-/* Undo Complete Button */
 .undo-complete {
   background-color: #f1ecff;
   color: #6f42c1;
@@ -177,8 +169,6 @@ html, body {
   background-color: #e3d7ff;
 }
 
-
-/* Add/Optimize button container: now side-by-side */
 .task-controls {
   display: flex;
   justify-content: center;
@@ -188,45 +178,33 @@ html, body {
   flex-wrap: wrap;
 }
 
-/* Buttons */
-.btn1 {
-  padding: 12px 24px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
-  background-color: #6c63ff;
-  border: none;
-  border-radius: 8px;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.btn1:hover {
-  background-color: #594ae2;
-}
-
+.btn1,
 .btn2 {
   padding: 12px 24px;
   font-size: 16px;
   font-weight: 600;
   color: #fff;
-  background-color: #34c66a;
   border: none;
   border-radius: 8px;
   text-decoration: none;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-
+.btn1 {
+  background-color: #6c63ff;
+}
+.btn1:hover {
+  background-color: #594ae2;
+}
+.btn2 {
+  background-color: #34c66a;
+}
 .btn2:hover {
   background-color: #06882de8;
 }
 
-
-/* Empty dashboard (slightly pushed up) */
 .empty-dashboard {
-  margin: 80px auto 0; /* moved up from center */
+  margin: 80px auto 0;
   padding: 40px;
   max-width: 600px;
   text-align: center;
@@ -234,19 +212,16 @@ html, body {
   border-radius: 12px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
 }
-
 .empty-dashboard h2 {
   font-size: 30px;
   margin-bottom: 10px;
   color: #333;
 }
-
 .empty-dashboard p {
   font-size: 20px;
   color: #666;
   margin-bottom: 24px;
 }
-
 .empty-dashboard .btn-primary {
   background-color: #ef4b4b;
   color: #fff;
@@ -258,25 +233,22 @@ html, body {
   transition: background-color 0.3s ease, transform 0.2s ease;
   display: inline-block;
 }
-
 .empty-dashboard .btn-primary:hover {
   background-color: #d63c3c;
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(214, 60, 60, 0.5);
 }
 
-
 .flash-message {
-  margin: 0 auto 20px;   /* Center horizontally */
-  text-align: center;    /* Center the text inside */
-  max-width: 600px;      /* Optional: restrict width */
+  margin: 0 auto 20px;
+  text-align: center;
+  max-width: 600px;
   font-weight: 600;
   font-size: 0.95rem;
   padding: 12px 16px;
   border-radius: 10px;
   user-select: none;
 }
-
 
 /* Responsive adjustments */
 @media (max-width: 768px) {

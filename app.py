@@ -5,7 +5,7 @@ import sqlite3
 import os
 from init_db import create_tables
 import pytz
-
+from math import ceil
 
 def login_required(f):
     @wraps(f)
@@ -34,6 +34,21 @@ def get_db_connection():
     return conn
 
 # ------------------------ AUTH ROUTES ------------------------
+
+@app.template_filter('to_ist')
+def to_ist(value, format="%d %b %Y %I:%M %p"):
+    if value is None:
+        return "N/A"
+    try:
+        utc = pytz.utc
+        ist = pytz.timezone("Asia/Kolkata")
+        dt = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+        dt_utc = utc.localize(dt)
+        dt_ist = dt_utc.astimezone(ist)
+        return dt_ist.strftime(format)
+    except Exception:
+        return "Invalid time"
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -121,6 +136,8 @@ def reset_password():
 
 # ------------------------ TASK ROUTES ------------------------
 
+
+
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session:
@@ -138,26 +155,8 @@ def dashboard():
     tasks = cur.fetchall()
     conn.close()
 
-    # Format start_time nicely
-    formatted_tasks = []
-    for task in tasks:
-        task = dict(task)
-        if task['start_time']:
-            try:
-                dt = datetime.strptime(task['start_time'], "%Y-%m-%d %H:%M:%S")
-            except ValueError:
-                dt = datetime.strptime(task['start_time'], "%Y-%m-%d %H:%M:%S.%f")
-            
-            now = datetime.now()
-            if dt.date() == now.date():
-                task['start_time_nice'] = dt.strftime("Today at %I:%M %p")
-            elif dt.date() == (now - timedelta(days=1)).date():
-                task['start_time_nice'] = dt.strftime("Yesterday at %I:%M %p")
-            else:
-                task['start_time_nice'] = dt.strftime("%b %d at %I:%M %p")
-        else:
-            task['start_time_nice'] = None
-        formatted_tasks.append(task)
+    # Just convert row to dict — no formatting
+    formatted_tasks = [dict(task) for task in tasks]
 
     return render_template('dashboard.html', username=session['username'], tasks=formatted_tasks)
 
@@ -170,6 +169,11 @@ def add_task():
         task_name = request.form['task_name']
         description = request.form.get('description', '')
         estimated_time = int(request.form['estimated_time'])
+
+        if estimated_time < 1:
+            flash("Estimated time must be at least 1 minute.", "error")
+            return redirect(url_for('add_task'))
+
         priority = int(request.form.get('priority', 0))
 
         conn = get_db_connection()
@@ -193,7 +197,12 @@ def edit_task(task_id):
 
     if request.method == 'POST':
         task_name = request.form['task_name']
-        estimated_time = request.form['estimated_time']
+        estimated_time = int(request.form['estimated_time'])
+
+        if estimated_time < 1:
+            flash("Estimated time must be at least 1 minute.", "error")
+            return redirect(url_for('edit_task', task_id=task_id))
+
         priority = request.form.get('priority', 0)  # will be string, can convert if needed
 
         cur.execute('UPDATE tasks SET task_name = ?, estimated_time = ?, priority = ? WHERE id = ? AND user_id = ?',
@@ -228,8 +237,6 @@ def delete_task(task_id):
     return redirect(url_for('dashboard'))
 
 
-from datetime import datetime
-
 @app.route('/mark_complete/<int:task_id>')
 def mark_complete(task_id):
     if 'user_id' not in session:
@@ -253,10 +260,16 @@ def mark_complete(task_id):
         except ValueError:
             start_time = datetime.strptime(task['start_time'], "%Y-%m-%d %H:%M:%S.%f")
 
-        completed_at = datetime.now()
-        actual_time_minutes = int((completed_at - start_time).total_seconds() // 60)
+        # ✅ Normalize both times to UTC
+        utc = pytz.utc
+        start_time_utc = utc.localize(start_time)
+        completed_at_utc = datetime.utcnow().replace(tzinfo=utc)
 
-        # Insert into completed_tasks table
+        # ✅ Correct time difference in seconds, then round to minutes
+        seconds_elapsed = (completed_at_utc - start_time_utc).total_seconds()
+        actual_time_minutes = max(1, ceil(seconds_elapsed / 60))
+
+        # ✅ Insert into completed_tasks table
         cur.execute('''
             INSERT INTO completed_tasks 
             (user_id, task_name, description, estimated_time, actual_time, start_time, completed_at)
@@ -268,30 +281,26 @@ def mark_complete(task_id):
             task['estimated_time'],
             actual_time_minutes,
             task['start_time'],
-            completed_at.strftime("%Y-%m-%d %H:%M:%S")
+            completed_at_utc.strftime("%Y-%m-%d %H:%M:%S")
         ))
 
         # ✅ Update user_stats table
         today = datetime.now().strftime("%Y-%m-%d")
-        cur.execute('''
-            SELECT * FROM user_stats WHERE user_id = ? AND date = ?
-        ''', (session['user_id'], today))
+        cur.execute('SELECT * FROM user_stats WHERE user_id = ? AND date = ?', (session['user_id'], today))
         stats_row = cur.fetchone()
 
         if stats_row:
-            # If row exists, increment tasks_completed
             cur.execute('''
                 UPDATE user_stats SET tasks_completed = tasks_completed + 1
                 WHERE user_id = ? AND date = ?
             ''', (session['user_id'], today))
         else:
-            # Otherwise, insert new row
             cur.execute('''
                 INSERT INTO user_stats (user_id, date, tasks_completed)
                 VALUES (?, ?, 1)
             ''', (session['user_id'], today))
 
-        # Delete from active tasks
+        # ✅ Remove from active task list
         cur.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
         conn.commit()
 
@@ -302,27 +311,23 @@ def mark_complete(task_id):
     conn.close()
     return redirect(url_for('dashboard'))
 
-
-
-
 @app.route('/start_task/<int:task_id>')
 def start_task(task_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
-    india_timezone = pytz.timezone("Asia/Kolkata")
-    india_time = datetime.now(india_timezone).strftime("%Y-%m-%d %H:%M:%S")
+    utc_now = datetime.now(pytz.utc).strftime("%Y-%m-%d %H:%M:%S")
 
     conn = get_db_connection()
     cur = conn.cursor()
-
     cur.execute("UPDATE tasks SET start_time = ? WHERE id = ? AND user_id = ?",
-                (india_time, task_id, session['user_id']))
+                (utc_now, task_id, session['user_id']))
     conn.commit()
     conn.close()
 
     flash("Task started!", "success")
     return redirect(url_for('dashboard'))
+
 
 @app.route('/pause_task/<int:task_id>')
 def pause_task(task_id):
