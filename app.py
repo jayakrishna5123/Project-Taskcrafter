@@ -514,11 +514,11 @@ def productivity():
 
     # Efficiency
     # Calculate efficiency if actual time > 0 else 0
-    efficiency=0
-    if total_estimated > total_actual and total_actual==0:
-            efficiency = 100.0
-    if total_actual > 0:
-            efficiency = round((total_estimated / total_actual) * 100, 2)
+    efficiency = 0
+    if total_estimated > total_actual and total_actual == 0:
+        efficiency = 100.0
+    elif total_actual > 0:
+        efficiency = min(100.0, round((total_estimated / total_actual) * 100, 2))
 
 
     connection.close()
